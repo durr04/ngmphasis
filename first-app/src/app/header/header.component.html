@@ -1,0 +1,31 @@
+
+
+<div style="background:bisque"> {{cname}} </div>
+
+
+<h1 [style.backgroundColor]="isActive ? 'blue' : 'yellow'">This is my header section</h1>
+
+<h2 [class.bordered]="isBordered">Company Name : {{ companyName }} </h2>
+
+<input type="text" [(ngModel)]="companyName" >
+{{companyName}}
+
+<br><br>
+
+<p>{{location}}</p>
+
+<br>
+
+<input type="text" (keyup.enter)="onKeyUp($event)">
+
+
+
+<br><br>
+
+<input type="button" value="Click Me" (click)="onClickButton($event)" [disabled]="!isActive">
+<br><br>
+<table border="1">
+        <tr>
+            <td [attr.colspan]="colspanvalue">Sometext</td>
+        </tr>
+</table>

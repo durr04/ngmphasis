@@ -1,0 +1,7 @@
+<h1>Welcome to my first angular app</h1>
+<p> You Clicked on {{ selectedCourse }} </p>
+<hr>
+
+<app-header [cname]="courseName"></app-header>
+
+<app-navbar (sendData)="onCourseSelected($event)" ></app-navbar>

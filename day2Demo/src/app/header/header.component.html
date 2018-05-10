@@ -1,0 +1,29 @@
+<div class="header">
+  <p>This is Header Section</p>
+
+  <h1 [style.backgroundColor]="isActive ? 'yellow' : 'brown' "> {{ companyName }} </h1>
+
+  <h1 [innerText]="companyName" [class.bordered]="isActive" ></h1>
+
+  <input type="button" (click)="onClick($event)" value="click" [disabled]="!isActive">
+
+  <br>  <br>
+
+  <input type="text" [(ngModel)]="companyName"  (keyup.enter)="onKeyUp($event)">
+  {{ companyName }}
+
+  <br>
+
+  <br>
+
+  <input type="text" #fname (keyup.enter)="onKeyUp1(fname.value)">
+
+  <br>
+
+  <table>
+    <tr>
+      <td [attr.colspan]="colspanvalue"> some text </td>
+    </tr>
+  </table>
+
+</div>
