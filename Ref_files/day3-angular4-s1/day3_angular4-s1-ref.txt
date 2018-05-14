@@ -1,0 +1,261 @@
+Template
+-------------------------
+	1. store the template in an external html file and specify
+		'templateUrl' property in @Component() 
+
+		@Component({
+			selector : 'app-root',
+			templateUrl : './app.component.html'
+		})
+
+	2. use the 'template' property 
+
+		@Component({
+			selector : 'app-root',
+			template : '<h1>this is some html content</h1>'
+		})	
+
+Styles
+----------------------
+
+	1. using global 'styles.css' file to define all the style rules 
+
+
+	2. using 'styles' property in @Component()
+
+		@Component({
+			selector : 'app-root',
+			template : '<h1>this is some html content</h1>'
+			styles : [];
+		})
+
+	3. using 'styleUrls' property in @Component()
+
+		@Component({
+			selector : 'app-root',
+			template : '<h1>this is some html content</h1>'
+			styleUrls : ['./app.component.css'	];
+		})
+
+View Encapsulation
+----------------------------
+	- Shadow DOM
+
+		var ele = document.querySelector('somecssclass');
+		ele.innerHTML = `
+				<style> h1 {color:red;}</style>
+				<h1> This is red h1 </h1>
+				`
+
+
+		var ele = document.querySelector('somecssclass');
+		var root = ele.createShadowRoot();
+		root.innerHTML = `
+				<style> h1 {color:red;}</style>
+				<h1> This is red h1 </h1>
+				`
+
+Adding Bootstrap css to our angular app
+-----------------------------------------------
+
+	1. import bootstrap.css file into src/styles.css
+
+		@import "~bootstrap/dist/css/bootstrap.css"
+
+		or
+
+	2. define the bootstrap.css file path in .angular-cli.json using 'styles []'
+
+		"styles": [
+        		"styles.css",
+        		"../node_modules/bootstrap/dist/css/bootstrap.css"
+      		],
+
+Built-in Directives
+------------------------------
+	- directives are used to enhance/modify the html element/DOM
+
+	1. *ngIf directive
+	---------------------------
+		- show/hide part of a page depending on some condition 
+
+		<div *ngIf="boolean_expression">
+			this is displayed if the expression is true
+		</div>
+
+		<div *ngIf=" a > b "> ...
+
+		<div *ngIf="isActive"> ...
+
+		<div *ngIf="isActive()">
+
+
+		*ngIf with else part
+		------------------------
+		<div *ngIf="courses.length > 0; else noCourses">
+
+      			<h1>List of Courses...</h1>
+      				<ul class="list-group">
+       				 <li class="list-group-item"> {{ courses[0] }} </li>
+        			<li class="list-group-item"> {{ courses[1] }} </li>
+        			<li class="list-group-item"> {{ courses[2] }} </li>
+        			<li class="list-group-item"> {{ courses[3] }} </li>
+      				</ul>
+  			</div>
+
+  		<ng-template #noCourses>
+      			<div>
+       				<h3>...no courses yet!</h3>
+      			</div>
+  		</ng-template>
+
+
+	2. [ngSwitch] directive 
+	----------------------------
+		- if you want to compare the value of a field or property against 					multiple values..
+
+
+		  <div [ngSwitch]="myVar">
+   			 <div *ngSwitchCase="'1'"> This is div 1 </div>
+    			<div *ngSwitchCase="'2'"> This is div 2 </div>
+    			<div *ngSwitchCase="'3'"> This is div 3 </div>
+    			<div  *ngSwitchDefault> this is something else </div>
+  		</div>
+
+
+	3. *ngFor directive
+	------------------------------------
+		- render a list/array of objects
+
+
+		<div *ngFor="let loopvar of arrayorlist" > 
+			{{ loopvar }}
+		</div>
+		
+
+		- ngFor directive exports some values i.e. index, odd, even, first, last
+
+		<div *ngFor="let name of nameslist; index as idx" > 
+			{{ idx }} {{ name }}
+		</div>
+
+
+	4. [ngStyle]
+	
+		- set a given css properties to the dom element using angular expression
+
+		[style.property] = "value"
+
+		<div [style.backgroundColor] = "'yellow'"
+		
+		<div [ngStyle] = "{color:red; background:yellow}" >
+
+		<h1 [ngStyle]="bordered">This is Heading one</h1>
+
+	5. [ngClass] directive
+	
+		- dynamically set/apply css classes to the element 
+
+		<div [class.bordered] = "true">
+
+		 <p [ngClass]="{highlight:isActive}"> This is Paragraph </p>
+
+		 <p [ngClass]="['class1','class2']"> .... </p>
+
+
+Custom Directives
+--------------------------
+	
+	- Attribute Directive
+	------------------------
+
+		a. create a new ts file "blueheading.directive.ts"
+
+			@Directive({
+				selector : "[bluehighlight]"
+			})
+			export class BlueDirective{
+
+				constructor(eleRef:ElementRef){
+					//eleRef.nativeElement.style.color = "blue"
+				}
+
+			}
+
+			export class BlueDirective{
+
+				constructor(eleRef:ElementRef, renderer:Renderer2){
+					this.renderer.setStyle(eleRef.nativeElement, 'property','value')
+				}
+
+			}
+
+			export class BlueDirective{
+
+				@HostBinding('style.color') mycolor='blue'
+
+			}
+
+		b. add in module declarations 
+
+			app.module.ts
+			@NgModule({
+				declarations : [BlueHighLightDirective]
+				...
+			})
+
+		c. use the directive
+
+			<h1 bluehighlight> .. </h1>
+
+
+
+
+		<ng-template>
+			<div *appUnless="isActive">
+  				This is div block 1
+			</div>
+		</ng-template>
+
+
+Service
+---------------------------------
+	- Communicate between components
+	- Centralized store where we can write some logic/common code
+
+
+	Create a Service
+	----------------------
+	a. create a typescript class 'myservice.service.ts"
+
+		export class MyService{
+
+			logStatus(status){
+				console.log(status);
+			}
+		}
+
+
+	b. inject the service instance in component 
+
+		export class AppComponent{
+
+			constructor(private service:MyService){}
+
+			...
+		}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

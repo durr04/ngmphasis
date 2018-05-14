@@ -1,0 +1,254 @@
+Directory Structure
+	|
+	|-> e2e
+	|    |-> end to end test
+	|
+	|-> node_modules
+	|	|->3rd party modules 
+	|	|->purely for development
+	|
+	|->src
+	|   |	
+	|   |->app
+	|   |	|->app.module.ts
+	|   |	|->app.component.ts
+	|   |	|->app.component.html
+	|   |
+	|   |->assets
+	|   |	 |->static files, images, pdf, other files
+	|   |
+	|   |->environment
+	|   |	|-> configuration for diff. environments 
+	|   |
+	|   |->index.html
+	|   |	|-->main view/file which is served
+	|   |
+	|   |->main.ts
+	|   |	|->starting point of your angular appication
+	|   |
+	|   |->polyfills.ts
+	|   |	|->imports some scripts required to run angular application
+	|   |
+	|   |->styles.css
+	|   |	|->global css file 
+	|   |
+	|   |->test.ts
+	|   |
+	|   
+	|   
+	|-> .angular-cli.json
+	|	|-> configuration settings for angular cli   
+	|
+
+-> every angular application has atleast one root module usually called "AppModule"
+-> a module is a container to group related components 
+
+-> every angular app has a root component called "AppComponet"
+
+
+-> ng serve
+
+
+Webpacks
+--------------------------
+	 -angular cli uses a tool called webpage 
+	- which gets all the scripts, stylesheets, and combines them, and create bundles 
+
+-->History of angular
+-------------------------
+
+
+angularjs		angular2		angular4
+   |			  |			  |
+ 2010			2016			2017
+   |			  |
+ angular 1.x		typescript
+   |
+ javascript
+
+	2.0	2.1	2.2	2.3 .............. 4
+
+	@angular/core 2.3.0
+	@angular/forms  2.3.0
+	@angular/http 2.3.0
+	@angular/router 3.3.0
+
+
+
+**==>Building block of the angular application
+-----------------------------------------
+
+1. Component
+	- controls a patch of the screen called "View"
+	- we can write applications logic inside a ts class and this class can interact 		with a view
+
+2. Template
+	- a template is a form of html that tell angular how to render the component 
+
+3. angular libraries
+
+	- angular ships with a collection of libraries 
+
+		@angular/core
+		@angular/http
+		@angular/forms
+		@angular/router
+
+
+4. Metadata
+	- tells angular how to process a ts class
+	- we can attach metadata to a class using a "decorator"
+
+		@Component()	@Pipe()	 	@Injectable()
+		@NgModule()	@Input()	@Output() 
+
+5. Module
+	
+	-> every angular application has atleast one root module usually called 				"AppModule"
+	-> a module is a container to group related components 
+
+
+
+	@NgModule({
+
+		declarations: [
+			..here you can declare components, directives, pipes,etc.
+		],
+
+		imports : [
+			..here you can import other modules 
+		],
+
+		provides : [
+			..here you can define the services 
+		],
+
+		bootstrap : [
+			..here you can define the root component to be bootstraped
+		]
+	
+	})
+	export class AppModule{
+	}
+
+
+**=>Creating a Component
+-------------------------------
+
+	1. create a component manually
+
+		a. create a ts file 'header.component.ts'
+
+		@Component({
+  			selector : 'app-header',
+  			templateUrl :'./header.component.html'
+		})
+		export class HeaderComponent{
+
+		}
+
+		b. create a template "header.component.html"
+
+			<div>
+  				<p>This is Header Section</p>
+			</div>
+
+
+		c. use the <app-header> selector in html 
+
+		d. declare this component in app.module.ts
+
+
+	2. create a component using ng command 
+
+
+		>ng generate component Navbar
+
+			or
+
+		> ng g c Navbar
+
+
+**=>Data Binding
+---------------------------------
+	- communicate between component and template 
+
+	1. String Interpolation
+		
+		<h1> {{ companyName }} </h1>
+
+		- string interpolation works well when you want to output some dynamic 			values inside headings, paragraphs, div, span tags.
+
+	2. Property binding 
+
+		<h1 [innerText]="companyName"> 
+
+		<input type="button" [value]="companyName">
+
+	
+	3. attribute binding
+	
+		<td [attr.colspan]="colspanvalue"> some text </td>
+
+	4. class binding
+
+		- add additional css classes to html element based on condition 
+
+		  <h1 [class.bordered]="isActive" > .... </h1>
+
+	5. style binding
+
+		<h1 [style.backgroundColor]="tsfield"> </h1>
+
+	6. event binding 
+
+		  <input type="button" (click)="onClick($event)"  value="click">
+
+	7. event filtering 
+
+		<input type="text" (keyup.enter)="onKeyUp($event)">
+
+
+	8. two way data binding 
+		
+		<input type="text" [(ngModel)]="companyName">
+
+
+
+	
+*=> Custom property binding
+
+	- @Input() decorator is used to communicate from parent to child 
+
+
+		<h1 [innerText]="tsfield">
+
+		<input [value]="tsfield">
+
+		app.component.html
+		--------------------
+			<app-navbar [courses]="myCourses">  </app-navbar>
+
+
+
+*=> Custom Event Binding
+
+
+	- @Output() decorator represents a custom event, which can be emitted on certain 		user actions
+
+<app-navbar [courses]="myCourses" (selectCourse)="onCourseSelected($event)"></app-navbar>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

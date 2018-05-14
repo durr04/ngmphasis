@@ -1,0 +1,248 @@
+Day4 - Angular 4 - S1 -
+------------------------------------
+
+Pipes
+------------------
+	- pipes are used to transform output/data in our template
+	- 
+
+	- built in pipes
+		uppercase
+		lowercase
+		date
+		currency
+		number 
+		decimal
+		async
+
+	{{ productname | uppercase }} 
+
+	{{ price | decimal }} 
+
+	{{ description }}
+
+	{{ lastDate }}
+
+
+	custom pipes
+	-----------------
+
+		{{ description | shorten }}
+
+	- assignment : create a custom pipe to transfor the given input in "Title Case"
+			- the prepositions i.e. of/the should be in lowercase 
+			unless they are the first word of title
+
+
+Forms
+------------------
+	- implement a form with diff. input fields
+	- show validation errors
+	
+	- in Angular there two approaches to handle forms 
+
+	
+	Template-Driven Forms			Reactive Form / Model-Driven Form
+
+   - simple form with basic			- more control over validation logic
+	validation				- complex forms with complex logic
+
+   - make some fields required,			- easier to test / unit test validation logic
+	make values within a range etc
+
+  - easier to create/ less code/ less control	- 
+
+
+
+	FormControl	: created for each input control in application
+	    |
+	    |--> value
+	    |--> valid
+	    |--> touched
+	    |--> untouched
+	    |--> dirty (value is changed)
+	    |--> pristine (value not changed)
+
+	FormGroup	: represents a group of controls
+  	    |--> value
+	    |--> valid
+	    |--> touched
+	    |--> untouched
+	    |--> dirty (value is changed)
+	    |--> pristine (value not changed)	
+
+
+There are two ways to create formControl / formGroup objects
+
+	1. template driven form
+		- angular will create these objects implicitely simple by adding 
+			some diretives on template
+		
+		<form>
+			<input type="Text" ngModel name="username">
+		<form>
+
+
+		-> add ngModel directive and name attribute to each input control
+		-> add #localRef to each control which referes to the FormControl object
+
+			<input type="text"
+                   		id="username"
+                   		class="form-control"
+                   		ngModel
+                   		name="username"
+                   		#uname="ngModel"
+                   		>
+		-> add #localRef to <form> element the referes to FormGroup 
+
+			      <form  #myform="ngForm" >
+
+		-> handle the submit event 
+
+			    <form  #myform="ngForm" (ngSubmit)="onSubmit(myform)">
+
+		-> add validations on each form element 
+
+			<input type="text"
+                   		id="username"
+                   		class="form-control"
+                   		ngModel
+                   		name="username"
+                  		 #uname="ngModel"
+                   		required
+                   		minlength="5"
+                   		maxlength="10"
+                   		pattern="abcdef"
+                   		>
+
+		-> show validation errors 
+
+			 <div *ngIf="!uname.valid && uname.touched">
+              			<span *ngIf="uname.errors.required"> Username is required </span>
+              			<span *ngIf="uname.errors.minlength"> Minimum {{ uname.errors.minlength.requiredLength }} characters are required </span>
+              			<span *ngIf="uname.errors.pattern">Not correct as per the pattern </span>
+            		</div>
+
+		->styling invalid controls/fields
+
+		->validating forms
+
+		->Grouping controls 
+
+			<div ngModelGroup="contact">
+				<input ...
+				<input ...
+			</div>
+
+
+	2. Reactive form - Model Driven Forms
+		- need to explicitely create these objects in our component
+		- more control over form structure
+		- more control over validation logic
+		- unit test validation logic
+
+	
+	-> Create FormControl and FormGroup object programmatically
+
+		component :
+		----------------
+			signUpForm = new FormGroup({
+				'username' : new FormControl(),
+				'password' : new FormControl()
+			})
+
+	template:
+	---------------
+	<form [formGroup]='signUpForm'>
+
+		<input type="text"
+			formControlName='username'>
+
+		<input type="text"
+			formControlName='password'>
+
+	</form>
+
+	-> add Validations
+
+		'username' : new FormControl('status', Validators, ValidatorFn | [ValidatorFn]),
+
+		'username' : new FormControl('', Validators.required),
+
+	-> show validation errors on template 
+
+	  <div *ngIf="username.invalid && username.touched">
+       		 <span *ngIf="username.errors.required">Username is required</span>
+       		<span *ngIf="username.errors.minlength">Min 3 characters required</span>
+      	   </div>
+
+		or
+
+	<div *ngIf="signUpForm.get('username').invalid && signUpForm.get('username').touched">
+       		 <span *ngIf="username.errors.required">Username is required</span>
+       		<span *ngIf="username.errors.minlength">Min 3 characters required</span>
+      	   </div>
+	
+
+	-> Add custom Validatiors
+
+		= new FormControl('initialvalue', ValidatorFn, AsyncValidatorFn)
+
+		--add a custom validation..that the username should not contains spaces..
+
+		-->write a ValidatorFn
+
+		- ValidatorFn is an interface 
+
+			interface ValidatorFn {
+  				(c: AbstractControl): ValidationErrors | null
+			}
+
+	
+	-> Implement Asynchronus validations 
+	
+			static shouldBeUnique(){
+
+			}
+
+		new FormControl('initialvalue', [ValidatorFn], AsyncValidatorFn)
+
+
+
+		interface AsyncValidatorFn(c:AbstractControl): 
+				Promise<ValidatorErrors| null> |
+				Observable<ValidatorErrors| null> 
+
+		 static unameShouldBeUnique(control:AbstractControl) : Promise<ValidationErrors|null> | Observable<ValidationErrors|null>
+  		{
+    		return new Promise( (resolve, reject)=>{
+      			setTimeout(()=>{
+       				if(control.value == 'xyz'){
+          				resolve({shouldbeunique:true})
+        			}else{
+          				reject(null)
+        			}
+      			},2000)
+
+    		    } )
+  		}
+
+
+
+	www.github.com/suhvishal/ngmphasis
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

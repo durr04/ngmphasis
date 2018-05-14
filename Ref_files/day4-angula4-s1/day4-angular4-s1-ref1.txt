@@ -1,0 +1,314 @@
+Day4_angular4_s1
+-------------------------
+
+==> Pipes
+-------------
+	-> pipes are used to transform data 
+	-------------------------------------
+	->uppercase
+	->lowercase
+	->decimal
+	->number
+	->percent
+	->date
+		
+	->async
+	->json
+
+	-> custom pipes
+	----------------------
+
+		a. create a new typescript class which implements PipeTransform interface
+
+		b. provide a decorator @Pipe({ name : 'nameofthepipe'})
+
+		c. implement the transform() method	
+
+		d. declare the pipe in app.module.ts
+
+		or
+
+		create a new pipe using 
+			>ng g pipe pipename
+
+	assignment : create a custom pipe to output the 'title' in TitleCase
+			-the prepositions i.e. of/the should be small letter unless 
+				they are the first word of the title
+
+==>forms
+-------------
+	-> there are two approaches to handle a form
+
+
+
+
+	FormControl object
+		-> represents a single input element. i.e. textfield, checkbox, dropdown.
+		-> value, valid, touched, untouched, dirty, pristine, etc.
+
+	FormGroup object
+		-> represents a form or a group of controls
+		-> value, valid, touched, untouched, dirty, pristine, etc.
+
+	<form ngForm >
+
+		<input type="text" ngModel name="somename">
+
+		<input type="radio" ngModel name="somename">
+
+		<input type="checkbox" ngModel name="somename">
+
+		<select ngModel name="somename">
+			<option>...</option>
+		</select>
+
+	</form>
+
+
+
+	1. Template Drive Forms
+		- apply some directive/attributes in template
+		- angular will automically create FormControl and FormGroup object
+		- less code in typescript
+
+	2. Reactive Forms / Model Driven Forms 
+		- we need to create FormControl/FormGroup objects explicitely 
+			inside our component
+
+	Reactive Forms				Template Driven Forms
+------------------------------------------------------------------------------------
+	- more control on the code		- simple forms with basic validation
+	- more control over validation logic	- easier to create / less code
+
+	- unit test the validation logic	- less control
+
+
+==> ngModel directive : create the FormControl object automically 
+
+==> ngForm directive : create the FormGroup object for every <form> element 
+
+
+
+==>Template Driven forms
+---------------------------------
+
+1. set up the template 
+
+	<-- the #myForm will refer FormGroup object -->
+
+	<form #myForm="ngForm" (ngSubmit)="onFormSubmit(myForm)">
+
+		<input type="text" 
+			ngModel
+			name="username"
+			#uname="ngModel">	<--#uname will refer the 
+							FormContorl Object 
+							created automatically for this input field 
+		<input type="text" 
+			ngModel
+			name="email"
+			#email="ngModel>
+
+		<select ngModel 
+			name="question"
+			#question="ngModel>
+
+			<option>...</option>
+		</select>
+		
+	</form>
+
+2. access the myForm.value property and other properties in typescript / component
+
+		myForm.value
+
+3. Add validations to input elements
+
+	required
+	menlength
+	maxlength
+	pattern
+
+4. show validation errors
+
+	<div *ngIf="!uname.valid && uname.touched"> Username is not valid </div>
+
+
+5. specific error messages 
+
+	<div *ngIf="!uname.valid && uname.touched">
+		<span *ngIf="uname.errors.minlength"> min 3 letter are required </span>
+		<span *ngIf="uname.errors.required"> username is required </span>
+	</div>
+
+6. styling invalid input fields
+
+		input.ng-invalid.ng-touched{
+ 
+			 border:2px solid red;
+
+		}
+
+==>Reactive Forms
+---------------------------------
+	- create contorls programmatically
+	- add validations 
+	- add custom validations
+	- implement asychronus validations
+		ie. involes contacting to the server
+			username field...validate username for uniqueness 
+
+
+	<form [formGroup]="signupForm">
+
+		<input type="text" formControlName="username">	
+
+		<input type="text"  formControlName="email">
+
+		<select  formControlName="question">
+			<option>...</option>
+		</select>
+		
+	</form>
+
+
+	1. setup some typescript code in component 
+
+		signupForm = new FormGroup({
+					
+			"username" : new FormControl(),
+			"email" : new FormControl(),
+			"question" : new FormControl()
+
+		})
+
+
+	2. Configure the FormControl object
+
+		"username" : new FormControl(
+					'initialvalue', 
+					 ValidatorFn | ValidatorFn[],
+					 AsyncValidatorFn | AsyncValidatorFn[]
+						)
+
+
+	3. bind the signupForm (FormGroup) field of component with the [formGroup] 
+		property of the <form>
+	
+		<form [formGroup] = "signupForm">
+
+
+	4. adding basic validation 
+
+		"username" : new FormControl(
+					'initialvalue', 
+					 ValidatorFn | ValidatorFn[],
+					 AsyncValidatorFn | AsyncValidatorFn[]
+						)
+
+		"username" : new FormControl('', Validators.required )
+
+
+		"username" : new FormControl('', [Validators.required, Validators.minLength(3)] )
+
+
+		this.signupForm = fb.group({
+        
+			"username" : ['', [Validators.required, Validators.minLength(3)]],
+        
+			"email" : [''],
+        
+			"question" : ['']
+      
+		})
+
+	5. show validation error messages 
+
+		<div *ngIf="signupForm.get('username').invalid && signupForm.get('username').touched">
+
+			 Username is required 
+		</div>
+
+		 <div *ngIf="username.invalid && username.touched">
+                
+			Username is required 
+              
+		</div>
+
+
+	6. show specific messages 
+
+		<div *ngIf="username.invalid && username.touched">
+                
+		   <span *ngIf="username.errors.required">Username is required</span>
+                   <span *ngIf="username.errors.minlength">Username should be min 3 characters </span> 
+              
+		</div>
+
+
+	7. provide custom Validators 
+
+	"username" : new FormControl(
+				'initialvalue', 
+				ValidatorFn | ValidatorFn[],
+				AsyncValidatorFn | AsyncValidatorFn[]
+						)		
+
+	- to add custom validation we need to implement a "ValidatorFn" function
+
+		- ValidatorFn is an interface which define a function type
+
+		interface ValidatorFn {
+  			(c: AbstractControl): ValidationErrors | null
+		}
+
+				AbstractControl
+					|
+			----------------------------------
+			|				|
+			FormControl			FormGroup
+
+
+	- create a function which matches the ValidatorFn signature
+
+		 static cannotContainSpace(control:AbstractControl):ValidationErrors|null{
+
+        		if( (control.value as string).indexOf(' ')>0 ){
+            			return { cannotContainSpace : true }
+        		}
+
+        		return null;
+    		}
+	
+	        "username" : ['', [Validators.required, Validators.minLength(3), MyValidators.cannotContainSpace]],
+
+
+
+
+	8. implement Asynchronus validations
+
+		- to perform asynchronus validations we need create a function
+			which is of type "AsyncValidatorFn"
+
+
+	interface AsyncValidatorFn {
+  		(c: AbstractControl): Promise<ValidationErrors | null> | Observable<ValidationErrors | null>
+	}
+
+	-->Promise / Obervable are objects/methods to perform asynchronus tasks 
+
+
+		static shouldBeUnique(control:AbstractControl):Promise<ValidationErrors | null> | Observable<ValidationErrors | null>{
+
+		}
+
+
+
+
+
+
+
+
+
+
+

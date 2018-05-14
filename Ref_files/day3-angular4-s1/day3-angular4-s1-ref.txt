@@ -1,0 +1,266 @@
+Day3 - Angular 4 - S1
+----------------------------
+
+Template
+------------------------
+	- there are two forms of using templates in component 
+
+
+		@Component({
+			selector : 'app-root',
+			template: `<h1>this is html content </h1>
+				    <p>some more content </p>
+					`
+		})
+
+		@Component({
+			selector : 'app-root',
+			templateUrl: './app.component.html'
+		})
+
+styles
+-----------------------------------
+	1. define styles rules in global 'styles.css' file 
+
+	2. defing styles for specific component using ..
+
+		styles : []
+
+		styleUrls : ['./cssfile1.css','./file2.css','./file3.css']
+
+View Encapsulation
+-----------------------
+	- Shadow DOM
+
+Adding bootstrap to the angular application
+-----------------------------------------------
+	
+	>npm install bootstrap@3.3.7 --save
+
+
+	1. import the bootstrap.css file in 'styles.css' file
+
+		@import "~bootstrap/dist/css/bootstrap.css";
+
+		or
+
+	2. define bootstrap.css file path in angular-cli.json file 
+
+
+Built-in Directives
+-----------------------------
+	- directives are used to modify/enhance the DOM
+
+	1. *ngIf directive
+	----------------------
+		- show/hide some parts of page based on some conditions 
+
+
+		list of coures...
+			-
+			-
+			-
+			-
+		no courses yet!...
+
+		<div *ngIf="true/false"> .. </div>
+
+		<div *ngIf="booleanexpression"> .. </div>
+
+		<div *ngIf="isActive"> .. </div>
+
+		<div *ngIf="isActive()"> .. </div>
+
+
+	*ngIf with else
+	------------------
+
+		<div *ngIf="courses.length > 0; else nocourses"> 
+			..
+			..
+		</div>
+		
+		<ng-template #nocourses>
+			<div>
+		    		<p>No Courses yet!...</p>
+			</div>
+		</ng-template>
+
+
+	2. [ngSwitch] directive
+		
+		- when you want to compare the value of a field with multiple values. 
+
+
+		<div [ngSwitch]="myVar">
+
+			<div *ngSwitchCase="'1'"> This is div 1 </div>	
+			<div *ngSwitchCase="'2'"> This is div 2 </div>	
+			<div *ngSwitchCase="'3'"> This is div 3 </div>
+
+			<div *ngSwitchDefault> This is something else </div>
+		</div>
+
+
+	3. *ngFor directive
+	-------------------------
+		- render a list/array of objects 
+
+
+		<div *ngFor="let loopVar of listorArray"> 
+			{{ loopVar }}
+		</div>
+
+		- *ngFor directive also exports some values i.e. index, odd, even, first, last etc.
+		
+	4. [ngStyle] directive
+	----------------------------
+		
+		<div [style.color]="tsfield"> .. </div>
+		
+		<div [ngStyle]="{color:'red', background:'yellow' }"> .. </div>
+
+
+	5. [ngClass] directive
+	----------------------------
+
+		- apply css classes conditionally 
+
+		<div [class.myclass] = "true/false"> .. </div>
+
+		<h2 [ngClass]="{blueborder:isBordered}">This is Heading two</h2>
+
+		<h2 [ngClass] = "['blueborder','redborder']"> ... </h2>
+
+
+Create a custom directive
+---------------------------------
+
+	a. attribute directive
+
+		<h1 blueHighLight> ... </h1>
+
+		1. create a file "bluehighlight.directive.ts"
+
+			@Directive({
+  				selector: '[blueHighLight]'
+			})
+			export class BlueHighLightDirective{
+			
+				//write code to modify the host element
+				//1.
+				eleRef.nativeElement.style.backgroundColor = 'blue'
+
+				//2. use renderer to apply styles
+				 renderer.setStyle(eleRef.nativeElement, 'backgroundColor', 'yellow')
+
+				//3. using @HostBinding()
+				@HostBinding('style.backgroundColor') myColor:string = 'yellow';
+			}
+
+
+
+	@HostBinding() : 
+		- we can bind a specific property to the host element 
+
+
+	@HostListener()
+		- we can listen to dom events on host elements 
+
+
+
+	b. structural directives 
+
+
+		<div *ngIf="true">
+			this is div tag 
+		</div>
+		
+		<ng-template [ngFor]="true">
+			<div>
+				this is div tag 
+			</div>
+		</ng-template>
+	
+
+
+
+		<h2 *appUnless="isActive"> 
+			This is Heading two! 
+		</h2>
+
+		
+		<ng-template [appUnless] = "isActive">
+			<h2> This is heading two </h2>
+		</ng-tempalte>
+
+
+
+
+Services and Dependency Injection
+----------------------------------------------
+
+	- using services.. you can write some code/common logic and put it inside a central
+		place..
+	- share some common data using services\
+
+
+	1. Create a ts file "myservice.service.ts"
+
+		export class MyService{
+
+		}
+
+	2. ng g service MyService
+
+
+	there are three places where we can provide the service
+
+	1. AppModule	: same instance of service is available application wide
+
+	2. AppComponent	: same instance of service is available for all child components 
+				(but not other services)
+
+	3. any other Component : instance of service  only for this current component 
+
+
+	DataService{				    p1
+		fetch order details..		C1, C2, C3
+	}
+
+
+
+
+
+
+
+
+
+
+Three types of directives
+
+	1. attribute 
+		- enhance the dom
+
+		[ngStyle]
+		[ngSwitch]
+		[ngClass]
+
+	2. structural
+		- modify the dom
+		
+		*ngIf
+		*ngFor 
+		
+	3. component 
+
+
+
+
+
+
+
+
+
+
+
