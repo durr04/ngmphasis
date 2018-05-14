@@ -1,0 +1,28 @@
+/* You can add global styles to this file, and also import other style files */
+
+.header{
+  height:300px;
+  padding:10px;
+  background:bisque;
+  margin:10px;
+}
+
+ul.navbar{
+
+  margin:5px;
+  padding:5px;
+  background:bisque;
+  height:300px;
+}
+
+ul.navbar li{
+  list-style-type: none;
+  font-size:20px;
+}
+
+
+.bordered{
+  padding:5px;
+  border:1px solid blue;
+  margin:5px;
+}
