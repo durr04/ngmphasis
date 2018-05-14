@@ -1,0 +1,93 @@
+<div class="container">
+  <div class="row">
+    <div class="col-xs-12 col-sm-10 col-md-8 col-sm-offset-1 col-md-offset-2">
+
+      <form  #myform="ngForm" (ngSubmit)="onSubmit(myform)">
+
+        <div id="user-data">
+          <div class="form-group">
+
+
+            <label for="username">Username</label>
+            <input type="text"
+                   id="username"
+                   class="form-control"
+                   ngModel
+                   name="username"
+                   #uname="ngModel"
+                   required
+                   minlength="5"
+                   maxlength="10"
+                   pattern="abcdef"
+                   >
+            <div *ngIf="!uname.valid && uname.touched">
+              <span *ngIf="uname.errors.required"> Username is required </span>
+              <span *ngIf="uname.errors.minlength"> Minimum {{ uname.errors.minlength.requiredLength }} characters are required </span>
+              <span *ngIf="uname.errors.pattern">Not correct as per the pattern </span>
+            </div>
+
+          </div>
+
+<div ngModelGroup="contact">
+          <div class="form-group">
+            <label for="email">Mail</label>
+            <input type="email"
+                   id="email"
+                   class="form-control"
+                   ngModel
+                   name="email"
+                   #email="ngModel"
+                   required
+                   email
+            >
+          </div>
+
+          <div class="form-group">
+            <label for="mobile">
+              Mobile:
+              <input type="text" id="mobile"
+                     ngModel
+                     name="mobile"
+                     #mobile="ngModel"
+                     class="form-control">
+            </label>
+          </div>
+</div>
+
+        </div>
+        <div class="form-group">
+          <label for="secret">Secret Questions</label>
+
+
+
+
+
+          <select id="secret"
+                  class="form-control"
+                  ngModel
+                  name="question"
+                  #question="ngModel"
+                  required
+          >
+            <option value="pet">Your first Pet?</option>
+            <option value="teacher">Your first teacher?</option>
+          </select>
+
+
+
+
+
+        </div>
+
+        <button class="btn btn-primary"
+                type="submit"
+                [disabled]="myform.invalid">
+          Submit</button>
+
+
+      </form>
+    </div>
+    <br><br>
+    {{ myformData | json }}
+  </div>
+</div>

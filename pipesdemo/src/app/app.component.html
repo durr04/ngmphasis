@@ -1,0 +1,28 @@
+<div class="container">
+  <div class="row">
+    <div class="col-xs-12 col-sm-10 col-md-8 col-sm-offset-1 col-md-offset-2">
+      <ul class="list-group">
+        <li
+          class="list-group-item"
+
+          *ngFor="let server of servers | filterdata:'stable' "
+
+          [ngClass]="getStatusClasses(server)">
+          <span
+            class="badge">
+            {{ server.status }}
+          </span>
+          <strong>{{ server.name | shorten:'11' }}</strong> | {{ server.instanceType | uppercase }} | {{ server.started | date:'MM / dd / yyyy' }}
+        </li>
+      </ul>
+    </div>
+  </div>
+
+  <br>
+  <div>
+    <p> Course Rating {{ course.rating | number:'2.1-3' }}</p>
+    <p> Price : {{ course.price | currency:'AUD':'3.2-2' }}</p>
+    <p> Data : {{ someData | async }}</p>
+  </div>
+
+</div>
