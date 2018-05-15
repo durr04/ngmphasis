@@ -1,0 +1,314 @@
+Day5-angular4-s1
+--------------------------
+
+=> Observables / Promises
+---------------------------
+	- an Observable is angular is an Object, we import from 'rxjs'
+	- Observables to handle asynchronus tasks 
+
+	- previously callbacks and promises were used to handle asynchronus tasks
+
+	- observable supports some operators i.e. map()
+
+	const mypromise = new Promise( (resolve, reject)=>{
+
+		..http request..when the response received
+		resolve('emiting some data')
+
+		..error
+		reject('emit some error data')
+
+	} )
+
+	- build a simple observable 
+
+	import {Observable} from 'rxjs/Observable'
+
+	const myobservable1 = Observable.interval(1000)
+		
+		myobservable1.subscribe(
+			
+			(data)=>{
+		 	   console.log(data);
+			},
+			(error)=>{
+			   console.log(error);
+			},
+			()=>{
+			   console.log('completed')
+			}
+
+		)
+
+
+=> Http Requests
+--------------------------
+
+	- HttpModule <---version 4		@angular/http
+		|->Http service
+		|
+		or
+	- HttpClientModule <--version 4.3	@angular/common/http
+		|->HttpClient service
+
+	1. GET request / fetch data from server
+
+		httpClient.get(url)	<--return observable
+
+
+		this.httpClient.get(this.url)
+        		.subscribe(
+          			(response)=>{
+            				console.log(response)
+            				this.posts = response;
+          			}
+        		)
+
+	2. POST Request to add a new post
+
+		this.httpClient.post(url, body)	<-- return observable
+
+		let post = {title:value};
+     		 this.httpClient.post(this.url, JSON.stringify(post))
+        		.subscribe(
+          			(response)=>{
+            				console.log(response)
+            				post['id'] = response['id']
+            				this.posts.splice(0,0,post)
+          			}
+        		)
+
+	3. PUT / PATCH Request (update data)
+
+		httpClient.put(url, data)	<-- update entire object
+		httpClient.patch(url, data)	<-- update specific properties of an object
+
+		this.httpClient.patch(this.url+'/'+post.id, JSON.stringify({isRead:true}))
+      			.subscribe(
+        			(response)=>{
+          				console.log(response)
+        			}
+      			)
+
+	5. Delete request
+
+		this.httpClient.delete(this.url+'/'+post.id)
+      			.subscribe(
+        			(response)=>{
+          				console.log(response)
+         				let index = this.posts.indexOf(post);
+          				this.posts.splice(index, 1)
+        			}
+      			)
+
+
+	@Injectable() Decorator:
+	-------------------------------------
+
+
+	
+	@Injectable()
+	export class MyService{
+		//common code/central respository
+
+		constructor(anotherservice:AnotherService
+				someother:SomeOtherService){
+
+		}
+
+	}
+
+
+	export class AnotherService{
+
+	}
+
+
+	--after creating a service, we can inject that service into component or anywhere
+
+	export class AppComponent{
+
+		constructor(service:MyService){
+
+		}
+	}
+
+
+
+
+
+
+=> Routing - Creating SPA
+---------------------------------
+
+	- RouterModule		@angular/router
+	- provides services/directives to implement routing/navigation in our
+		application
+	- load view/components dynamically as we change the url 
+
+	
+	1. Configure the Routes
+		- Each Route is responsibe to determine which component should be visible
+			when the user navigates to certain url 
+
+			http://localhost:4200
+				=> HomeComponent
+
+			http://localhost:4200/followers
+				=> GitHubFollowersComponent
+
+			http://localhost:4200/followers/123
+				=> GitHubFollowerProfileComponent
+
+			http://localhost:4200/posts
+				=> PostComponent
+
+
+		import {Routes} from '@angular/router'
+
+		const appRoutes:Routes = [
+				
+				{
+				   path : '',
+				   component : HomeComponent
+				},
+				{
+				   path : 'followers',
+				   component : GitHubFollowersComponent
+				},
+				{
+				   path : 'followers/:id',
+				   component : GitHubFollowersComponent
+				},
+				{
+				   path : 'posts',
+				   component : PostComponent
+				}
+
+			]
+
+
+		imports: [
+    			..
+			..,
+    			RouterModule.forRoot(appRoutes)
+ 			 ],
+
+	2. Add <router-outlet>
+		- define the place where the componets should be rendered
+
+	3. Add links / navigate programmatically to diff. urls 
+
+		 <a href="/followers">Followers</a>
+
+		 <a href="/posts"> posts </a>
+
+
+		 <a routerLink="/followers">Followers</a>
+
+
+		 <li routerLinkActive="active"
+            		[routerLinkActiveOptions]="{exact:true}">
+          			<a routerLink="/">Home</a>
+        	</li>
+
+
+		<a [routerLink]="['/followers', 12]">Followers</a>
+	
+	==>passing parameters to the route
+
+			{
+				path : 'followers/:id',
+				component : GitHubFollowersComponent
+			}
+
+			<a [routerLink]="['/followers', 12]">Followers</a>
+	
+	==>read the route parameters for the active route
+
+		 constructor(private route:ActivatedRoute) {
+      			this.currentFollowerid = route.snapshot.params['id'];
+  		}
+
+	==>how to navigate programmatically 
+		this.router.navigate(['/followers',21354]);
+
+
+=> Basics of Testing using jasmine & karma
+----------------------------------------
+
+	- we use jasmine framework as our testing framework
+	- we use karma test runner 
+
+	describe()	- used to define test suite
+			- group of related tests 
+
+	it()		- define a spec or a test
+
+	-->for every given component, service, function, class, directive etc. 
+		we need to create ".spec.ts" file
+
+	-->ng test		
+		- build the application and launch the karma test runner
+	
+	-->Testing a typescript function 
+
+		compute.ts
+		-------------
+		export function compute(number){
+			if(number<0){
+				return 0;
+			}
+			return number+1;
+		}
+
+		test1 : 'should return 0 if the input is negative'
+		test2 : 'should return incremented value if the input is positive'
+
+	-->Testing a string/array
+
+		export function greet(name) { 
+  			return 'Welcome ' + name; 
+		}
+		->test1: 'the output of the greet function must contain the name' 
+
+	-->Testing a component functionalities 
+
+		export class VoteComponent { 
+  
+  			totalVotes = 0; 
+
+  			upVote() { 
+    				this.totalVotes++;
+  			}
+
+  			downVote() { 
+    				this.totalVotes--;
+  			}
+		}
+
+		test1 : upVote() should increments totalvotes
+		test2 : downVote() should decrement totalvotes
+
+	-->Testing TodoFormComponent  
+
+		export class TodoFormComponent {
+ 
+  			form: FormGroup; 
+
+  			constructor(fb: FormBuilder) {
+   			    this.form = fb.group({
+      				name: ['', Validators.required],
+      				email: [''],
+    			});
+  		    }
+		}
+	test1 : the form property of this component should have two controls 'name' and 'email'
+	test2 : the name property should have required validation
+
+
+
+
+
+
+

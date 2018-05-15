@@ -1,0 +1,243 @@
+Day5 - Angular4 - s1
+--------------------------------
+
+=>Observables
+----------------------
+	- in angular an observable is an object which is imported 
+		from a 3rd party library called 'rxjs'
+	- observables are used to handle asynchronus tasks 
+	- callbacks, promises, and observables are methods to handle asynchronus tasks
+
+	- observables supports multiple events
+	- observables supports some operators such as map()
+
+	Build an Observable
+	----------------------------
+	1. const MyObservable = Observable.interval(1000)
+		
+		MyObservale.subscribe(
+			(num:number)=>{
+				console.log(num);
+				}
+			);
+
+	2. const myObservale = Observable.create(
+				()=>{
+
+				    setTimeout(()=>{
+					observer.next('first data package')
+					}, 3000)
+
+				     setTimeout(()=>{
+					observer.next('second data package')
+					}, 5000)
+
+				      setTimeout(()=>{
+					observer.error('this is some error')
+					}, 3000)
+
+				     setTimeout(()=>{
+					observer.complete()
+					}, 3000)
+				}
+
+			)
+
+
+		myObservale.subscribe(
+			(data:string)=>{
+			   console.log(data);
+			},
+			(error)=>{
+			   console.log(error);
+			},
+			()=>{
+			  console.log('this is complete');
+			}
+		)
+
+=>Http requests
+-----------------------
+
+	- import HttpClientModule
+	- using 'HttpClient' service we can make http requests 
+
+	1. get data from a server
+
+		 http.get(this.url)
+        
+			.subscribe(
+          
+				(response)=>{
+            
+					console.log(response)
+            
+					this.posts = response;
+          
+				}
+)
+	2. http post request
+
+		  onCourseAdd(value){
+      
+			let post = {title:value}
+      
+			this.http.post(this.url, JSON.stringify(post))
+          
+				.subscribe(
+              
+					(response)=>{
+                  
+					console.log(response)
+                  
+					post['id'] = response['id']
+                  
+					this.posts.splice(0,0,post)
+             
+				 }
+)
+  
+			}
+	
+	3. Updating the data
+		patch request	: to update only few properties in object
+		put request	: to update the entire object
+
+
+		 this.http.patch(this.url+'/'+post.id, JSON.stringify({isRead:true}))
+		
+        .subscribe(
+          
+				(response)=>{
+              
+					console.log(response)
+          
+				}
+)
+
+	4. delete the data
+
+		http delete request 
+
+
+
+	export class AnotherService{
+
+	}
+
+
+	@Injectable()
+	export class MyService{
+
+	}
+
+
+	@Component({...})
+	export class AppComponent{
+
+		constructor(server:MyService){
+
+		}
+
+	}
+
+
+
+
+=>Routing - SPA
+-----------------------
+	- angular provider "RouterModule"
+	- using this module we can implment the navigation in our application 
+	- dynamic view loading
+
+
+	1. Configure routes
+		- each route determines which component should be visible
+			when user navigation to certain url
+
+		const appRoutes:Routes = [
+			{
+				path : '',
+				component : HomeComponent
+			},
+			{
+				path : '/followers',
+				component : GithubFollowersComponent
+			},
+			{
+				path : '/posts',
+				component : PostsComponent
+			},
+			{
+				path : '**',
+				component : NotFoundComponent
+			}
+		]
+
+
+		imports : [
+			RouterModule.forRoot(appRoutes)
+		]
+
+	2. Add <router-outlet>
+
+
+
+	3. Add links / navigate programmatically
+
+		<a href="/followers"> Click </a>
+
+		<a routerLink="/followers"> Click </a>	
+
+		<a [routerLink]=" '/users' "> Users </a>	
+
+		<a [routerLink]="['/users', 1]"> Users </a>	
+
+		navigate programmatically
+		-------------------------------
+
+-->Basics of Testing
+-----------------------
+
+
+--> write  test for a functions 
+
+	export function compute(number) {
+  
+		if (number < 0)
+    
+			return 0; 
+
+ 
+		return number + 1;
+
+	}
+
+
+
+	-> "should return 0 if the input is negative"
+
+	-> "should return incremented value if the input is positive"
+
+
+
+	describe() : used to define a test suite / group of related tests
+
+	it()	: define a spec or test 
+
+		it('test-name', ()={
+			//test body
+			//write code to test 
+		})
+
+	
+export function greet(name) { 
+  
+		return 'Welcome ' + name; 
+	
+}
+
+
+
+		==> 'ensure the name that we pass to the greet() is in the output
+
